@@ -13,6 +13,7 @@ source:
     patches:
       - dont_link_with_libcxxabi.patch
       - 530-ld64-add-conda-specific-env-vars-to-modify-lib-search-paths.patch
+      - fix_sparc_pc.patch
 
 build:
   number: 4
@@ -105,8 +106,8 @@ outputs:
     test:
       commands:
         - test -f $PREFIX/bin/{{ macos_machine }}-ld
-      downstreams:
-        - gfortran_osx-64  # [osx]
+      #downstreams:
+      #  - gfortran_osx-64  # [osx]
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
