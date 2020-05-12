@@ -8,9 +8,9 @@ rm -f "${BUILD_PREFIX}"/lib/libz*${SHLIB_EXT}
 
 if [[ $target_platform == osx-64 ]]; then
   export CPU_COUNT=1
-  export CC=$(which clang)
-  export CXX=$(which clang++)
-  export TCROOT=$CONDA_BUILD_SYSROOT
+#  export CC=$(which clang)
+#  export CXX=$(which clang++)
+#  export TCROOT=$CONDA_BUILD_SYSROOT
 else
   export CC=$(which clang)
   export CXX=$(which clang++)
