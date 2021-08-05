@@ -19,7 +19,7 @@ source:
       - patches/530-ld64-add-conda-specific-env-vars-to-modify-lib-search-paths.patch
 
 build:
-  number: 22
+  number: 23
   skip: True  # [win]
   ignore_run_exports:
     - zlib
@@ -40,7 +40,7 @@ requirements:
     - zlib
     - llvmdev {{ llvm_version }}.*
     - libuuid   # [linux]
-    - tapi
+    - tapi <1100
 
 outputs:
   - name: cctools_{{ cross_platform }}
@@ -60,7 +60,7 @@ outputs:
         - zlib
         - llvmdev {{ llvm_version }}.*
         - llvm {{ llvm_version }}.*
-        - tapi
+        - tapi <1100
         - libcxx  # [osx]
         #- {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
       run:
@@ -106,7 +106,7 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - tapi
+        - tapi <1100
         - libcxx  # [osx]
         - libuuid  # [linux]
       run:

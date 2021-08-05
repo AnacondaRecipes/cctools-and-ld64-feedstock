@@ -22,6 +22,9 @@ c_compiler:
 vc:
   - 14
 c_compiler_version:     # [osx]
-  - "*"                 # [osx]
+  - "10.0.0"                 # [osx]
 cxx_compiler_version:   # [osx]
-  - "*"                # [osx]
+  - "10.0.0"                # [osx]
+CONDA_BUILD_SYSROOT:  # [osx and x86_64]
+  - /opt/MacOSX10.14.sdk  # [osx and x86_64]
+
