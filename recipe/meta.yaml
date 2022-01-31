@@ -34,6 +34,9 @@ requirements:
     - llvmdev {{ llvm_version }}.*  # [build_platform != target_platform]
     - make
     - sed
+    - patch     # [not win]
+    - m2-patch  # [win]
+
   host:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
