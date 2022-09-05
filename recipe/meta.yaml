@@ -129,7 +129,7 @@ outputs:
       requires:
         - clang {{ llvm_version }}.*
       commands:
-        - test -f $PREFIX/bin/{{ macos_machine }}-ld
+        - test -f $PREFIX/bin/{{ macos_machine }}-ld  # [osx]
         - echo "int main() {}" > lto.c                                              # [osx]
         - clang -c lto.c -o lto.o -flto                                             # [osx]
         - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx and x86_64]
