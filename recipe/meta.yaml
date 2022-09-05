@@ -82,7 +82,7 @@ outputs:
         - test -f $PREFIX/libexec/as/arm/as        # [arm64]
         - test -f $PREFIX/bin/{{ macos_machine }}-as
         - test -f $PREFIX/bin/{{ macos_machine }}-ranlib
-        - test -f $PREFIX/bin/{{ macos_machine }}-ld
+        - test -f $PREFIX/bin/{{ macos_machine }}-ld    # [not linux]
         - test -f $PREFIX/bin/{{ macos_machine }}-ar
         - test -f $PREFIX/bin/{{ macos_machine }}-otool
         # Check that otool is functioning
