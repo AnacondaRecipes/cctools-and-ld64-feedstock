@@ -156,9 +156,9 @@ outputs:
       run_constrained:
         - cctools {{ cctools_version }}.*
         - cctools_{{ cross_platform }} {{ cctools_version }}.*
-    test:
-      commands:
-        - test -f $PREFIX/bin/ld
+    test:  # [osx]
+      commands:  # [osx]
+        - test -f $PREFIX/bin/ld  # [osx]
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
