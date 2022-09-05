@@ -1,6 +1,6 @@
 {% set cctools_version = '949.0.1' %}
 {% set ld64_version = '530' %}
-{% set llvm_version = "12.0.0" %}
+{% set llvm_version = "14.0.6" %}
 
 {% if cross_platform is not defined %}
 {% set cross_platform = "osx-64" %}
@@ -19,8 +19,8 @@ source:
       - patches/530-ld64-add-conda-specific-env-vars-to-modify-lib-search-paths.patch
 
 build:
-  number: 24
-  skip: True  # [win]
+  number: 25
+  skip: True  # [win or (linux and s390x)]
   ignore_run_exports:
     - zlib
 
