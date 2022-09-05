@@ -5,6 +5,7 @@ macos_machine:
   - s390x-conda-linux-gnu        # [linux and s390x]
   - aarch64-conda-linux-gnu      # [linux and aarch64]
   - powerpc64le-conda-linux-gnu  # [linux and ppc64le]
+  - dummy  # [win]
 cross_platform:
   - osx-64         # [osx and x86_64]
   - osx-arm64      # [osx and arm64]
@@ -12,6 +13,7 @@ cross_platform:
   - linux-s390x    # [linux and s390x]
   - linux-aarch64  # [linux and aarch64]
   - linux-ppc64le  # [linux and ppc64le]
+  - dummpy         # [win]
 uname_machine:
   - x86_64       # [osx and x86_64]
   - arm64        # [osx and arm64]
@@ -19,6 +21,7 @@ uname_machine:
   - s390x        # [linux and s390x]
   - aarch64      # [linux and aarch64]
   - powerpc64le  # [linux and ppc64le]
+  - dummy        # [win]
 zip_keys:
   - - macos_machine
     - cross_platform
