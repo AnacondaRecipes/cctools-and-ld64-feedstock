@@ -20,7 +20,7 @@ source:
 
 build:
   number: 25
-  skip: True  # [win or linux]
+  skip: True  # [win or (linux and s390x)]
   ignore_run_exports:
     - zlib
 
@@ -43,8 +43,8 @@ requirements:
     - zlib
     - llvmdev {{ llvm_version }}.*
     - libuuid   # [linux]
-    - tapi <1100   # [not arm64]
-    - tapi >=1100  # [arm64]
+    - tapi <1100   # [not (arm64 or linux)]
+    - tapi >=1100  # [arm64 or linux]
 
 outputs:
   - name: cctools_{{ cross_platform }}
@@ -64,8 +64,8 @@ outputs:
         - zlib
         - llvmdev {{ llvm_version }}.*
         - llvm {{ llvm_version }}.*
-        - tapi <1100   # [not arm64]
-        - tapi >=1100  # [arm64]
+        - tapi <1100   # [not (arm64 or linux)]
+        - tapi >=1100  # [arm64 or linux]
         - libcxx  # [osx]
         #- {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
       run:
@@ -112,8 +112,8 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - tapi <1100   # [not arm64]
-        - tapi >=1100  # [arm64]
+        - tapi <1100   # [not (arm64 or linux)]
+        - tapi >=1100  # [arm64 or linux]
         - libcxx  # [osx]
         - libuuid  # [linux]
       run:
