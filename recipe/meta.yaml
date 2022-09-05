@@ -20,7 +20,7 @@ source:
 
 build:
   number: 25
-  skip: True  # [win or (linux and s390x)]
+  skip: True  # [win or linux]
   ignore_run_exports:
     - zlib
 
