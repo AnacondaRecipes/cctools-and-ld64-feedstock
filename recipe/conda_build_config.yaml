@@ -1,5 +1,5 @@
 macos_machine:
-  - x86_64-apple-darwin13.4.0    # [osx and x86_64]
+  - x86_64-apple-darwin20.0.0    # [osx and x86_64]
   - arm64-apple-darwin20.0.0     # [osx and arm64]
   - x86_64-conda-linux-gnu       # [linux and x86_64]
   - s390x-conda-linux-gnu        # [linux and s390x]
@@ -40,6 +40,6 @@ c_compiler_version:     # [osx and x86_64]
   - "10.0.0"                 # [osx and x86_64]
 cxx_compiler_version:   # [osx and x86_64]
   - "10.0.0"                # [osx and x86_64]
-CONDA_BUILD_SYSROOT:  # [osx and x86_64]
-  - /opt/MacOSX10.14.sdk  # [osx and x86_64]
+# CONDA_BUILD_SYSROOT:  # [osx and x86_64]
+#   - /opt/MacOSX10.14.sdk  # [osx and x86_64]
 

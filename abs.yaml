@@ -2,3 +2,5 @@
 build_parameters:
   - ""
 
+channels:
+  - https://staging.continuum.io/prefect/fs/clang-compiler-activation-feedstock/pr4/03d5a20
