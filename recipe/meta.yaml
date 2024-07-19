@@ -20,7 +20,7 @@ source:
       - patches/ppc-int64_t.patch
 
 build:
-  number: 25
+  number: 27
   skip: True  # [win or (linux and s390x)]
   ignore_run_exports:
     - zlib
