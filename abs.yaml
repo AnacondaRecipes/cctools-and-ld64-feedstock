@@ -2,3 +2,6 @@
 build_parameters:
   - ""
 
+staging_channel_upload_target: clang_revert
+
+upload_without_merge: true
