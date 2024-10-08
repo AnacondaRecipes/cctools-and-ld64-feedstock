@@ -26,7 +26,7 @@ source:
 
 build:
   number: 0
-  skip: True  # [win and s390x]
+  skip: True  # [win or (linux and s390x)]
   ignore_run_exports:
     - zlib
 
@@ -40,15 +40,16 @@ requirements:
     - llvmdev {{ llvm_version }}.*  # [build_platform != target_platform]
     - make
     - sed
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
     - zlib {{ zlib }}
     - llvmdev {{ llvm_version }}.*
     - libuuid   # [linux]
-    - tapi
-  run:
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
+    - tapi <1100   # [not (arm64 or linux)]
+    - tapi >=1100  # [arm64 or linux]
 
 outputs:
   - name: cctools_{{ cross_platform }}
@@ -68,13 +69,14 @@ outputs:
         - zlib {{ zlib }}
         - llvmdev {{ llvm_version }}.*
         - llvm {{ llvm_version }}.*
-        - tapi
+        - tapi <1100   # [not (arm64 or linux)]
+        - tapi >=1100  # [arm64 or linux]
         - libcxx  # [osx]
         - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
       run:
         - libcxx  # [osx]
         - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
-        #- sigtool
+        - ldid    # [osx]
       run_constrained:
         - ld64 {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
@@ -117,13 +119,14 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - tapi
+        - tapi <1100   # [not (arm64 or linux)]
+        - tapi >=1100  # [arm64 or linux]
         - libcxx  # [osx]
         - libuuid  # [linux]
       run:
         - {{ pin_compatible("tapi") }}
         - libcxx  # [osx]
-        #- sigtool
+        - ldid    # [osx]
       run_constrained:
         - {{ pin_compatible("clang") }}
         - ld {{ ld64_version }}.*
@@ -136,8 +139,8 @@ outputs:
         - test -f $PREFIX/bin/{{ macos_machine }}-ld
         - echo "int main() {}" > lto.c                                              # [osx]
         - clang -c lto.c -o lto.o -flto                                             # [osx]
-        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx]
-        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx]
+        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx and x86_64]
+        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch arm64     # [osx and arm64]
       downstreams:
         - gfortran_osx-64  # [osx and cross_platform=="osx-64"]
     about:
