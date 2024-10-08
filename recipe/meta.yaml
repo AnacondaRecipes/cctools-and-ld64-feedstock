@@ -26,7 +26,7 @@ source:
 
 build:
   number: 0
-  skip: True  # [win]
+  skip: True  # [win and s390x]
   ignore_run_exports:
     - zlib
 
@@ -43,7 +43,7 @@ requirements:
   host:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
-    - zlib
+    - zlib {{ zlib }}
     - llvmdev {{ llvm_version }}.*
     - libuuid   # [linux]
     - tapi
@@ -65,7 +65,7 @@ outputs:
         - automake
         - make
       host:
-        - zlib
+        - zlib {{ zlib }}
         - llvmdev {{ llvm_version }}.*
         - llvm {{ llvm_version }}.*
         - tapi
@@ -74,7 +74,7 @@ outputs:
       run:
         - libcxx  # [osx]
         - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
-        - sigtool
+        #- sigtool
       run_constrained:
         - ld64 {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
@@ -123,7 +123,7 @@ outputs:
       run:
         - {{ pin_compatible("tapi") }}
         - libcxx  # [osx]
-        - sigtool
+        #- sigtool
       run_constrained:
         - {{ pin_compatible("clang") }}
         - ld {{ ld64_version }}.*
@@ -136,6 +136,7 @@ outputs:
         - test -f $PREFIX/bin/{{ macos_machine }}-ld
         - echo "int main() {}" > lto.c                                              # [osx]
         - clang -c lto.c -o lto.o -flto                                             # [osx]
+        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx]
         - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx]
       downstreams:
         - gfortran_osx-64  # [osx and cross_platform=="osx-64"]
