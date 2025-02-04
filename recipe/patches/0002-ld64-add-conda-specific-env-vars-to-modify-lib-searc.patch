@@ -1,13 +1,24 @@
+From 319ada49d0fa9a1af360fc59c6bd9f91a5a0cd0d Mon Sep 17 00:00:00 2001
+From: Isuru Fernando <isuruf@gmail.com>
+Date: Mon, 16 Sep 2019 05:17:30 +0000
+Subject: [PATCH 2/5] ld64: add conda specific env vars to modify lib search
+ paths
+
+---
+ cctools/ld64/src/ld/Options.cpp | 35 ++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
+
 diff --git a/cctools/ld64/src/ld/Options.cpp b/cctools/ld64/src/ld/Options.cpp
-index e4b37ec..5dd207c 100644
+index 3bb8324..c0c0e05 100644
 --- a/cctools/ld64/src/ld/Options.cpp
 +++ b/cctools/ld64/src/ld/Options.cpp
-@@ -4017,11 +4017,27 @@ bool Options::shouldUseBuildVersion(ld::Platform plat, uint32_t minOSvers) const
+@@ -4237,12 +4237,28 @@ bool Options::shouldUseBuildVersion(ld::Platform plat, uint32_t minOSvers) const
  
  void Options::buildSearchPaths(int argc, const char* argv[])
  {
 -	bool addStandardLibraryDirectories = true;
 +	int addStandardLibraryDirectories = 1;
+ 	ld::Platform platform = ld::Platform::unknown;
  	std::vector<const char*> libraryPaths;
  	std::vector<const char*> frameworkPaths;
 +	char rawPath[PATH_MAX];
@@ -31,7 +42,7 @@ index e4b37ec..5dd207c 100644
  	// scan through argv looking for -L, -F, -Z, and -syslibroot options
  	for(int i=0; i < argc; ++i) {
  		if ( (argv[i][0] == '-') && (argv[i][1] == 'L') ) {
-@@ -4053,7 +4069,7 @@ void Options::buildSearchPaths(int argc, const char* argv[])
+@@ -4274,7 +4290,7 @@ void Options::buildSearchPaths(int argc, const char* argv[])
  			frameworkPaths.push_back(frameworkSearchDir);
  		}
  		else if ( strcmp(argv[i], "-Z") == 0 )
@@ -40,8 +51,8 @@ index e4b37ec..5dd207c 100644
  		else if ( strcmp(argv[i], "-v") == 0 ) {
  			fVerbose = true;
  			extern const char ldVersionString[];
-@@ -4146,11 +4162,19 @@ void Options::buildSearchPaths(int argc, const char* argv[])
- 			fBundleBitcode = true;
+@@ -4383,6 +4399,10 @@ void Options::buildSearchPaths(int argc, const char* argv[])
+ 			++i;
  		}
  	}
 +
@@ -51,17 +62,21 @@ index e4b37ec..5dd207c 100644
  	int standardLibraryPathsStartIndex = libraryPaths.size();
  	int standardFrameworkPathsStartIndex = frameworkPaths.size();
  	if ( addStandardLibraryDirectories ) {
-+		// Not that conda will care, but fix:
-+		// https://langui.sh/2015/07/24/osx-clang-include-lib-search-paths/
-+		if ( addStandardLibraryDirectories == 1 ) {
-+			libraryPaths.push_back("/usr/local/lib");
-+		}
- 		libraryPaths.push_back("/usr/lib");
--		libraryPaths.push_back("/usr/local/lib");
+@@ -4392,8 +4412,12 @@ void Options::buildSearchPaths(int argc, const char* argv[])
+ 			frameworkPaths.push_back("/System/DriverKit/System/Library/Frameworks/");
+ 		}
+ 		else {
++			// Not that conda will care, but fix:
++			// https://langui.sh/2015/07/24/osx-clang-include-lib-search-paths/
++			if ( addStandardLibraryDirectories == 1 ) {
++				libraryPaths.push_back("/usr/local/lib");
++			}
+ 			libraryPaths.push_back("/usr/lib");
+-			libraryPaths.push_back("/usr/local/lib");
  
- 		frameworkPaths.push_back("/Library/Frameworks/");
- 		frameworkPaths.push_back("/System/Library/Frameworks/");
-@@ -4166,7 +4190,8 @@ void Options::buildSearchPaths(int argc, const char* argv[])
+ 			frameworkPaths.push_back("/Library/Frameworks/");
+ 			frameworkPaths.push_back("/System/Library/Frameworks/");
+@@ -4409,7 +4433,8 @@ void Options::buildSearchPaths(int argc, const char* argv[])
  	}
  
  	// now merge sdk and library paths to make real search paths
@@ -71,7 +86,7 @@ index e4b37ec..5dd207c 100644
  	int libIndex = 0;
  	for (std::vector<const char*>::iterator it = libraryPaths.begin(); it != libraryPaths.end(); ++it, ++libIndex) {
  		const char* libDir = *it;
-@@ -4211,7 +4236,7 @@ void Options::buildSearchPaths(int argc, const char* argv[])
+@@ -4454,7 +4479,7 @@ void Options::buildSearchPaths(int argc, const char* argv[])
  					else
  						fLibrarySearchPaths.push_back(libDir);
  				}
@@ -80,3 +95,6 @@ index e4b37ec..5dd207c 100644
  					warning("directory not found for option '-L%s'", libDir);
  				}
  			}
+-- 
+2.38.1.windows.1
+
