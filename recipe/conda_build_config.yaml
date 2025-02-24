@@ -28,21 +28,29 @@ zip_keys:
     - uname_machine
 cxx_compiler:
   - clang_bootstrap  # [osx]
-  - gxx              # [linux]
+  - clang              # [linux]
   - vs2017           # [win]
 c_compiler:
   - clang_bootstrap  # [osx]
-  - gcc              # [linux]
+  - clang              # [linux]
   - vs2017           # [win]
 vc:
   - 14
 
 c_compiler_version:        # [linux or osx]
-  - 11                     # [linux]
-  - 17                     # [osx]
+  # - 11.2.0                 # [linux]
+  - 17                 # [linux]
+  - 17.0.6                     # [osx]
 cxx_compiler_version:      # [linux or osx]
-  - 11                     # [linux]
-  - 17                     # [osx]
+  # - 11.2.0                 # [linux]
+  - 17                 # [linux]
+  - 17.0.6                     # [osx]
+# c_compiler_version:        # [linux or osx]
+#   - 11                     # [linux]
+#   - 17                     # [osx]
+# cxx_compiler_version:      # [linux or osx]
+#   - 11                     # [linux]
+#   - 17                     # [osx]
 
 # c_compiler_version:     # [osx and x86_64]
 #   - "10.0.0"                 # [osx and x86_64]
