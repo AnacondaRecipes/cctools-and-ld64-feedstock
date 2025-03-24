@@ -1,3 +1,7 @@
-channels:
-  - https://staging.continuum.io/prefect/fs/clangdev-feedstock/pr4/b5c20c8
-  - https://staging.continuum.io/prefect/fs/compiler-rt-feedstock/pr2/ea67721
+build_parameters:
+  - "--suppress-variables"
+  - "--error-overlinking"
+
+upload_without_merge: True
+upload_to_staging_channel_in_pr: True
+channels: [ llvmdev17 ]

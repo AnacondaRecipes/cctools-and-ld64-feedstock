@@ -1,11 +1,11 @@
 #!/bin/bash
+set -ex
 
-. activate "${BUILD_PREFIX}"
-cd "${SRC_DIR}"
+cd ${SRC_DIR}/cctools_build_final/ld64
+make install
 
-pushd cctools_build_final/ld64
-  make install
-  if [[ ${DEBUG_C} == yes ]]; then
-    dsymutil ${PREFIX}/bin/*ld
-  fi
-popd
+#TODO: do we need this?
+if [[ ${DEBUG_C} == yes ]]; then
+  dsymutil ${PREFIX}/bin/*ld
+fi
+
