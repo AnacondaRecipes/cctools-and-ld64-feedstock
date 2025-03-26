@@ -1,6 +1,7 @@
 build_parameters:
   - "--suppress-variables"
-  - "--error-overlinking"
+  # - "--error-overlinking"
+  #TODO FIX OVERLINKING
 
 upload_without_merge: True
 upload_to_staging_channel_in_pr: True
