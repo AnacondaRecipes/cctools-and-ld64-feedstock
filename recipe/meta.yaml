@@ -1,5 +1,7 @@
-{% set cctools_version = '1010' %}
-{% set ld64_version = '951' %}
+{% set cctools_version_full = '1010.6' %}
+{% set cctools_version = cctools_version_full.split(".")[0] %}
+{% set ld64_version_full = '951.9' %}
+{% set ld64_version = ld64_version_full.split(".")[0] %}
 {% if llvm_version is not defined %}
 {% set llvm_version = "17.0" %}
 {% endif %}
@@ -14,15 +16,14 @@ package:
 
 source:
   # latest commit from branch {{ cctools_version }}-ld64-{{ ld64_version }}
-  - url: https://github.com/tpoechtrager/cctools-port/archive/437ced391dbf14dce86f977ca050a750d5682f39.tar.gz
-    sha256: cf4020ddb92467de020c322eb13f0cac9ed992daa862a09bc2607e42467b3042
+  - url: https://github.com/tpoechtrager/cctools-port/archive/refs/heads/{{ cctools_version_full }}-ld64-{{ ld64_version_full }}.zip
+  # - url: https://github.com/tpoechtrager/cctools-port/archive/437ced391dbf14dce86f977ca050a750d5682f39.tar.gz
+    sha256: 7ab3e89aa982031f418f5154a61be8e10bc70a588df5f9fa62eb71ab8df4ecbe
     patches:
       - patches/0001-Don-t-link-with-libc-abi.patch
       - patches/0002-ld64-add-conda-specific-env-vars-to-modify-lib-searc.patch
-      # Taken from https://github.com/tpoechtrager/cctools-port/pull/116
-      - patches/0003-Restore-using-__builtin_available-for-macos.patch
-      # Taken from https://github.com/tpoechtrager/cctools-port/pull/118
-      - patches/0004-Turn-off-outputIsMappableFile-when-building-to-osx-a.patch
+      - patches/0003-macos-system-dispatch.patch
+      - patches/0004-point-target-otool-to-llvm-otool-in-same-folder.patch
 
 build:
   number: 0
