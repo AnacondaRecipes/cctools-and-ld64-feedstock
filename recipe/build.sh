@@ -42,7 +42,16 @@ export CFLAGS="$CFLAGS -O2 -gdwarf-4"
 
 pushd ${SRC_DIR}/cctools
   ./autogen.sh
+  curl -o config.sub 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD'
+  curl -o config.guess 'https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD'
 popd
+
+# if [[ ${target_platform} =~ osx-.* ]]; then
+#     CMAKE_ARGS+=(-DCMAKE_C_FLAGS=-mlinker-version=305)
+#     CMAKE_ARGS+=(-DCMAKE_CXX_FLAGS=-mlinker-version=305)
+#     LDFLAGS="${LDFLAGS} -mlinker-version=305"
+# fi
+
 
 mkdir cctools_build_final
 pushd cctools_build_final
