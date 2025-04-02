@@ -1,12 +1,25 @@
 macos_machine:
   - x86_64-conda-linux-gnu       # [linux and x86_64]
   - aarch64-conda-linux-gnu      # [linux and aarch64]
+
 cross_platform:
   - osx-64         # [osx and x86_64]
   - osx-arm64      # [osx and arm64]
   - linux-64       # [linux and x86_64]
   - linux-aarch64  # [linux and aarch64]
-cxx_compiler:
-  - clang_bootstrap  # [osx]
-c_compiler:
-  - clang_bootstrap  # [osx]
+
+c_compiler:           # [osx]
+  - clang_bootstrap   # [osx]
+cxx_compiler:         # [osx]
+  - clang_bootstrap   # [osx]
+
+c_compiler_version:
+  - 11.2.0              # [linux]
+  - 17.0.6   # [osx]
+cxx_compiler_version:
+  - 11.2.0              # [linux]
+  - 17.0.6   # [osx]
+
+CONDA_BUILD_SYSROOT:
+  - /opt/MacOSX14.5.sdk        # [osx and x86_64]
+  - /Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk  # [osx and arm64]
