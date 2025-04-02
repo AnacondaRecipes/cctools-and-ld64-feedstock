@@ -14,12 +14,15 @@ cxx_compiler:         # [osx]
   - clang_bootstrap   # [osx]
 
 c_compiler_version:
-  - 11.2.0              # [linux]
-  - 17.0.6   # [osx]
+  - 11.2.0            # [linux]
+  - 17.0.6            # [osx]
 cxx_compiler_version:
-  - 11.2.0              # [linux]
-  - 17.0.6   # [osx]
+  - 11.2.0            # [linux]
+  - 17.0.6            # [osx]
 
-CONDA_BUILD_SYSROOT:
-  - /opt/MacOSX14.5.sdk        # [osx and x86_64]
-  - /Library/Developer/CommandLineTools/SDKs/MacOSX14.5.sdk  # [osx and arm64]
+MACOS_SDK_VERSION:
+  - 13.3
+
+# CONDA_BUILD_SYSROOT:
+#   - /opt/MacOSX13.3.sdk        # [osx and x86_64]
+#   - /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk  # [osx and arm64]
