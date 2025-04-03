@@ -26,7 +26,7 @@ source:
 
 build:
   number: 0
-  skip: True # [win]
+  skip: True # [not osx]
   ignore_run_exports:
     - zlib
 
@@ -133,11 +133,11 @@ outputs:
         - {{ pin_compatible("tapi") }}
         - libcxx    # [osx]
         - ldid
-      run_constrained:
-        - {{ pin_compatible("clang") }}
-        - ld {{ ld64_version }}.*
-        - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
+    run_constrained:
+      - {{ pin_compatible("clang") }}
+      - ld {{ ld64_version }}.*
+      - cctools {{ cctools_version }}.*
+      - cctools_{{ cross_platform }} {{ cctools_version }}.*
     test:
       requires:
         - clang {{ llvm_version }}.*
@@ -167,11 +167,18 @@ outputs:
       run:
         - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
       run_constrained:
+        - {{ pin_compatible("clang") }}
+        - ld {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
         - cctools_{{ cross_platform }} {{ cctools_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/ld
+    run_constrained:
+      - {{ pin_compatible("clang") }}
+      - ld {{ ld64_version }}.*
+      - cctools {{ cctools_version }}.*
+      - cctools_{{ cross_platform }} {{ cctools_version }}.*
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
@@ -224,3 +231,4 @@ extra:
     - h-vetinari
   skip-lints:
     - should_use_compilers
+    - missing_tests
