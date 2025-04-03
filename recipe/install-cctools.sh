@@ -1,5 +1,6 @@
 #!/bin/bash
-set -ex
+set -exo pipefail
+
 cd ${SRC_DIR}/cctools_build_final
 make install VERBOSE=1
 
