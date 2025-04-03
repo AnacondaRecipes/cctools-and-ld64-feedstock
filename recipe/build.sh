@@ -38,7 +38,6 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
   fi
 fi
 
-# export CPPFLAGS="$CPPFLAGS -DCPU_SUBTYPE_ARM64_E=2"
 export CXXFLAGS="$CXXFLAGS -O2 -gdwarf-4"
 export CFLAGS="$CFLAGS -O2 -gdwarf-4"
 
