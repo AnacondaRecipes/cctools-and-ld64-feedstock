@@ -130,6 +130,7 @@ outputs:
         - libcxx    # [osx]
         - ldid
       run_constrained:
+        - ld64 {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
         # clang might pull in the wrong cctools otherwise
         - clang {{ llvm_version }}.*
