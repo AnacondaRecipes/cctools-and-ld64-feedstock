@@ -4,10 +4,6 @@
 {% set llvm_version = "17.0" %}
 {% endif %}
 
-{% if cross_platform is not defined %}
-{% set cross_platform = "osx-64" %}
-{% endif %}
-
 package:
   name: cctools-and-ld64
   version: {{ ld64_version }}
@@ -53,7 +49,7 @@ requirements:
     - tapi >=1100
 
 outputs:
-  - name: cctools_{{ cross_platform }}
+  - name: cctools_{{ target_platform }}
     version: {{ cctools_version }}
     script: install-cctools.sh
     build:
@@ -74,10 +70,10 @@ outputs:
         - llvm {{ llvm_version }}.*
         - tapi >=1100
         - libcxx  # [osx]
-        - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
+        - {{ pin_subpackage("ld64_" + target_platform, max_pin="x.x") }}
       run:
         - libcxx  # [osx]
-        - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
+        - {{ pin_subpackage("ld64_" + target_platform, max_pin="x.x") }}
         - llvm-tools {{ llvm_version }}.*
         - ldid
       run_constrained:
@@ -109,7 +105,7 @@ outputs:
       license_file: cctools/APPLE_LICENSE
       summary: Assembler, archiver, ranlib, libtool, otool et al for Darwin Mach-O files
 
-  - name: ld64_{{ cross_platform }}
+  - name: ld64_{{ target_platform }}
     version: {{ ld64_version }}
     script: install-ld64.sh
     build:
@@ -134,10 +130,9 @@ outputs:
         - libcxx    # [osx]
         - ldid
       run_constrained:
-        - {{ pin_compatible("clang") }}
-        - ld {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
+        # clang might pull in the wrong cctools otherwise
+        - clang {{ llvm_version }}.*
     test:
       requires:
         - clang {{ llvm_version }}.*
@@ -148,7 +143,7 @@ outputs:
         - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx and x86_64]
         - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch arm64      # [osx and arm64]
       downstreams:
-        - gfortran_osx-64  # [osx and cross_platform=="osx-64"]
+        - gfortran_osx-64  # [osx and target_platform=="osx-64"]
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
@@ -163,12 +158,12 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
+        - {{ pin_subpackage("ld64_" + target_platform, exact=True) }}
       run:
-        - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
+        - {{ pin_subpackage("ld64_" + target_platform, exact=True) }}
       run_constrained:
         - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
+        - cctools_{{ target_platform }} {{ cctools_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/ld
@@ -187,10 +182,10 @@ outputs:
         - llvm {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
         - {{ pin_subpackage("ld64", exact=True) }}
-        - {{ pin_subpackage("cctools_" + cross_platform, exact=True) }}
+        - {{ pin_subpackage("cctools_" + target_platform, exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
-        - {{ pin_subpackage("cctools_" + cross_platform, exact=True) }}
+        - {{ pin_subpackage("cctools_" + target_platform, exact=True) }}
     test:
       commands:
         - test -f $PREFIX/bin/as
