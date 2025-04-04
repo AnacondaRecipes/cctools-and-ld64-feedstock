@@ -122,7 +122,7 @@ outputs:
       host:
         - llvm {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - tapi >=1100
+        # - tapi >=1100
         - libcxx {{ llvm_version }} 
         - libuuid  # [linux]
       run:
