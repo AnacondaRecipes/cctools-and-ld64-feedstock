@@ -16,7 +16,7 @@ source:
     patches:
       - patches/0001-Don-t-link-with-libc-abi.patch
       - patches/0002-ld64-add-conda-specific-env-vars-to-modify-lib-searc.patch
-      - patches/0003-macos-system-dispatch.patch    # [osx]
+      # - patches/0003-macos-system-dispatch.patch    # [osx]
       # for #76
       - patches/0004-point-target-otool-to-llvm-otool-in-same-folder.patch
 
@@ -58,7 +58,7 @@ outputs:
         - zlib
     requirements:
       build:
-        - libcxx {{ llvm_version }}
+        - libcxx {{ llvm_version }} # [osx]
         - {{ compiler('cxx') }}
         - autoconf
         - automake
@@ -126,7 +126,6 @@ outputs:
         - libcxx {{ llvm_version }} 
         - libuuid  # [linux]
       run:
-        - {{ pin_compatible("tapi") }}
         - libcxx    # [osx]
         - ldid
       run_constrained:
@@ -162,9 +161,6 @@ outputs:
         - {{ pin_subpackage("ld64_" + target_platform, exact=True) }}
       run:
         - {{ pin_subpackage("ld64_" + target_platform, exact=True) }}
-      run_constrained:
-        - cctools {{ cctools_version }}.*
-        - cctools_{{ target_platform }} {{ cctools_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/ld
