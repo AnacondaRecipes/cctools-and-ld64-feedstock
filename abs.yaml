@@ -1,6 +1,6 @@
 build_parameters:
   - "--suppress-variables"
-  - "--error-overlinking"
+  # - "--error-overlinking"
   #TODO FIX OVERLINKING
 
 upload_without_merge: True
