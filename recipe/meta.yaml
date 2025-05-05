@@ -203,6 +203,8 @@ outputs:
 
 about:
   home: https://github.com/tpoechtrager/cctools-port
+  dev_url: https://github.com/tpoechtrager/cctools-port
+  doc_url: https://github.com/tpoechtrager/cctools-port
   license: APSL-2.0
   license_family: Other
   license_file: cctools/APPLE_LICENSE
@@ -214,3 +216,7 @@ extra:
     - mingwandroid
     - davidbrochart
     - katietz
+    - h-vetinari
+  skip-lints:
+    - should_use_compilers
+    - missing_tests
