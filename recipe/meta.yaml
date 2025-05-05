@@ -74,7 +74,7 @@ outputs:
       run:
         - libcxx  # [osx]
         - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
-        - sigtool
+        - ldid    # [osx]
       run_constrained:
         - ld64 {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
@@ -123,7 +123,7 @@ outputs:
       run:
         - {{ pin_compatible("tapi") }}
         - libcxx  # [osx]
-        - sigtool
+        - ldid    # [osx]
       run_constrained:
         - {{ pin_compatible("clang") }}
         - ld {{ ld64_version }}.*
