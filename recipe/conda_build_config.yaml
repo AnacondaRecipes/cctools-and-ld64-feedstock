@@ -1,27 +1,12 @@
 macos_machine:
-  - x86_64-apple-darwin13.4.0    # [osx and x86_64]
-  - arm64-apple-darwin20.0.0     # [osx and arm64]
-  - x86_64-conda-linux-gnu       # [linux and x86_64]
-  - s390x-conda-linux-gnu        # [linux and s390x]
-  - aarch64-conda-linux-gnu      # [linux and aarch64]
-  - powerpc64le-conda-linux-gnu  # [linux and ppc64le]
-  - dummy  # [win]
+  - x86_64-apple-darwin13.4.0
+  - arm64-apple-darwin20.0.0
 cross_platform:
-  - osx-64         # [osx and x86_64]
-  - osx-arm64      # [osx and arm64]
-  - linux-64       # [linux and x86_64]
-  - linux-s390x    # [linux and s390x]
-  - linux-aarch64  # [linux and aarch64]
-  - linux-ppc64le  # [linux and ppc64le]
-  - dummpy         # [win]
+  - osx-64
+  - osx-arm64
 uname_machine:
-  - x86_64       # [osx and x86_64]
-  - arm64        # [osx and arm64]
-  - x86_64       # [linux and x86_64]
-  - s390x        # [linux and s390x]
-  - aarch64      # [linux and aarch64]
-  - powerpc64le  # [linux and ppc64le]
-  - dummy        # [win]
+  - x86_64
+  - arm64
 zip_keys:
   - - macos_machine
     - cross_platform
@@ -36,10 +21,7 @@ c_compiler:
   - vs2017           # [win]
 vc:
   - 14
-c_compiler_version:     # [osx and x86_64]
-  - "10.0.0"                 # [osx and x86_64]
-cxx_compiler_version:   # [osx and x86_64]
-  - "10.0.0"                # [osx and x86_64]
-CONDA_BUILD_SYSROOT:  # [osx and x86_64]
-  - /opt/MacOSX10.14.sdk  # [osx and x86_64]
-
+c_compiler_version:     # [osx]
+  - "*"                 # [osx]
+cxx_compiler_version:   # [osx]
+  - "*"                 # [osx]
