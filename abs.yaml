@@ -1,4 +1,8 @@
 # the conda-build parameters to use for disabling --skip-existing
 build_parameters:
-  - ""
+  - "--suppress-variables"
+  - "--error-overlinking"
 
+upload_without_merge: True
+upload_to_staging_channel_in_pr: True
+channels: [ llvmdev17-boot ]
