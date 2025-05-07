@@ -29,7 +29,7 @@ build:
     - zlib
   missing_dso_whitelist:
     - libc++.1.dylib  # [osx]
-
+    - "*/libtapi.dylib"  # [osx]
 requirements:
   build:
     - clangxx {{ llvm_version }}.*  # [linux]
@@ -64,6 +64,7 @@ outputs:
         - zlib
       missing_dso_whitelist:
         - libc++.1.dylib  # [osx]
+        - "*/libtapi.dylib"  # [osx]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -160,12 +161,15 @@ outputs:
     build:
       skip: True   # [cross_platform != target_platform]
       missing_dso_whitelist:
-        - libc++.1.dylib
+        - libc++.1.dylib  # [osx]
+        - "*/libtapi.dylib"  # [osx]
     script: install-ld64.sh
     requirements:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
+      run:
+        - libcxx  # [osx]
       run_constrained:
         - cctools {{ cctools_version }}.*
     test:
@@ -190,6 +194,7 @@ outputs:
         - {{ pin_subpackage("ld64", exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
+        - libcxx  # [osx]
     test:
       commands:
         - test -f $PREFIX/bin/as
