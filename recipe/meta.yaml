@@ -57,6 +57,8 @@ outputs:
     version: {{ cctools_version }}
     script: install-cctools.sh
     build:
+      # Don't cross compile
+      skip: True
       activate_in_script: True
       ignore_run_exports:
         - zlib
@@ -109,6 +111,8 @@ outputs:
     version: {{ ld64_version }}
     script: install-ld64.sh
     build:
+      # Don't cross compile
+      skip: True
       activate_in_script: True
       missing_dso_whitelist:
         - /usr/lib/libxar.1.dylib  # [osx]
@@ -133,7 +137,6 @@ outputs:
         - {{ pin_compatible("clang") }}
         - ld {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
     test:
       requires:
         - clang {{ llvm_version }}.*
@@ -163,12 +166,8 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
-      run:
-        - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
       run_constrained:
         - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/ld
@@ -189,10 +188,8 @@ outputs:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
         - {{ pin_subpackage("ld64", exact=True) }}
-        - {{ pin_subpackage("cctools_" + cross_platform, exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
-        - {{ pin_subpackage("cctools_" + cross_platform, exact=True) }}
     test:
       commands:
         - test -f $PREFIX/bin/as
