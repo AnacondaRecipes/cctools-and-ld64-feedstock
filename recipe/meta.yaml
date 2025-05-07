@@ -27,6 +27,8 @@ build:
   skip: True  # [win]
   ignore_run_exports:
     - zlib
+  missing_dso_whitelist:
+    - libc++.1.dylib  # [osx]
 
 requirements:
   build:
@@ -58,6 +60,8 @@ outputs:
       activate_in_script: True
       ignore_run_exports:
         - zlib
+      missing_dso_whitelist:
+        - libc++.1.dylib  # [osx]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -108,6 +112,7 @@ outputs:
       activate_in_script: True
       missing_dso_whitelist:
         - /usr/lib/libxar.1.dylib  # [osx]
+        - libc++.1.dylib  # [osx]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -151,6 +156,8 @@ outputs:
     version: {{ ld64_version }}
     build:
       skip: True   # [cross_platform != target_platform]
+      missing_dso_whitelist:
+        - libc++.1.dylib
     script: install-ld64-symlinks.sh
     requirements:
       host:
