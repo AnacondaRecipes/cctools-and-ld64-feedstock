@@ -28,7 +28,7 @@ build:
   ignore_run_exports:
     - zlib
   missing_dso_whitelist:
-    - libc++.1.dylib  # [osx]
+    - "*/libc++.1.dylib"  # [osx]
     - "*/libtapi.dylib"  # [osx]
 requirements:
   build:
@@ -63,7 +63,7 @@ outputs:
       ignore_run_exports:
         - zlib
       missing_dso_whitelist:
-        - libc++.1.dylib  # [osx]
+        - "*/libc++.1.dylib"  # [osx]
         - "*/libtapi.dylib"  # [osx]
     requirements:
       build:
@@ -117,7 +117,7 @@ outputs:
       activate_in_script: True
       missing_dso_whitelist:
         - /usr/lib/libxar.1.dylib  # [osx]
-        - libc++.1.dylib  # [osx]
+        - "*/libc++.1.dylib"  # [osx]
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -161,7 +161,7 @@ outputs:
     build:
       skip: True   # [cross_platform != target_platform]
       missing_dso_whitelist:
-        - libc++.1.dylib  # [osx]
+        - "*/libc++.1.dylib"  # [osx]
         - "*/libtapi.dylib"  # [osx]
     script: install-ld64.sh
     requirements:
