@@ -187,6 +187,9 @@ outputs:
     script: install-cctools.sh
     build:
       skip: True   # [cross_platform != target_platform]
+      missing_dso_whitelist:
+        - "*/libc++.1.dylib"  # [osx]
+        - "*/libtapi.dylib"  # [osx]
     requirements:
       host:
         - llvm  {{ llvm_version }}.*
