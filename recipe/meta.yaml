@@ -161,7 +161,7 @@ outputs:
       skip: True   # [cross_platform != target_platform]
       missing_dso_whitelist:
         - libc++.1.dylib
-    script: install-ld64-symlinks.sh
+    script: install-ld64.sh
     requirements:
       host:
         - llvm  {{ llvm_version }}.*
@@ -180,7 +180,7 @@ outputs:
 
   - name: cctools
     version: {{ cctools_version }}
-    script: install-cctools-symlinks.sh
+    script: install-cctools.sh
     build:
       skip: True   # [cross_platform != target_platform]
     requirements:
