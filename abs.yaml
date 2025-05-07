@@ -3,5 +3,4 @@ build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
 
-aggregate_check:
-  - false
+aggregate_check: false
