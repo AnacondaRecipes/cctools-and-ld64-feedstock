@@ -168,7 +168,6 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-      run:
         - libcxx  # [osx]
       run_constrained:
         - cctools {{ cctools_version }}.*
