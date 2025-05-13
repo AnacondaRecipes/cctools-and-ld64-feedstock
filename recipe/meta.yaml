@@ -2,10 +2,6 @@
 {% set ld64_version = '711' %}
 {% set llvm_version = "14.0" %}
 
-{% if cross_platform is not defined %}
-{% set cross_platform = "osx-64" %}
-{% endif %}
-
 package:
   name: cctools-and-ld64
   version: {{ ld64_version }}
@@ -23,11 +19,12 @@ source:
       - patches/0004-Turn-off-outputIsMappableFile-when-building-to-osx-a.patch
 
 build:
-  number: 25
+  number: 0
   skip: True  # [win]
   ignore_run_exports:
     - zlib
-
+  missing_dso_whitelist:
+    - "*/libc++.1.dylib"  # [osx]
 requirements:
   build:
     - clangxx {{ llvm_version }}.*  # [linux]
@@ -44,124 +41,30 @@ requirements:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
     - zlib
-    - llvmdev {{ llvm_version }}.*
-    - libuuid   # [linux]
-    - tapi
+    - llvmdev {{ llvm_version }}
+    - libuuid 1.41.5  # [linux]
+    - tapi 1100.0.11
   run:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
 
 outputs:
-  - name: cctools_{{ cross_platform }}
-    version: {{ cctools_version }}
-    script: install-cctools.sh
-    build:
-      activate_in_script: True
-      ignore_run_exports:
-        - zlib
-    requirements:
-      build:
-        - {{ compiler('cxx') }}
-        - autoconf
-        - automake
-        - make
-      host:
-        - zlib
-        - llvmdev {{ llvm_version }}.*
-        - llvm {{ llvm_version }}.*
-        - tapi
-        - libcxx  # [osx]
-        - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
-      run:
-        - libcxx  # [osx]
-        - {{ pin_subpackage("ld64_" + cross_platform, max_pin="x.x") }}
-        - ldid    # [osx]
-      run_constrained:
-        - ld64 {{ ld64_version }}.*
-        - cctools {{ cctools_version }}.*
-        # clang might pull in the wrong cctools otherwise
-        - clang {{ llvm_version }}.*
-    test:
-      commands:
-        # For arm64, cctools as calls the clang integrated assembler. Don't check for it
-        - test -f $PREFIX/libexec/as/x86_64/as
-        - test -f $PREFIX/libexec/as/arm/as        # [arm64]
-        - test -f $PREFIX/bin/{{ macos_machine }}-as
-        - test -f $PREFIX/bin/{{ macos_machine }}-ranlib
-        - test -f $PREFIX/bin/{{ macos_machine }}-ld
-        - test -f $PREFIX/bin/{{ macos_machine }}-ar
-        - test -f $PREFIX/bin/{{ macos_machine }}-otool
-        # Check that otool is functioning
-        - $PREFIX/bin/{{ macos_machine }}-otool -l $PREFIX/bin/{{ macos_machine }}-otool  # [target_platform == build_platform and target_platform == cross_platform]
-        - test -f $PREFIX/bin/{{ macos_machine }}-install_name_tool
-        - test -f $PREFIX/bin/{{ macos_machine }}-strip
-    about:
-      home: https://github.com/tpoechtrager/cctools-port
-      license: APSL-2.0
-      license_family: Other
-      license_file: cctools/APPLE_LICENSE
-      summary: Assembler, archiver, ranlib, libtool, otool et al for Darwin Mach-O files
-
-  - name: ld64_{{ cross_platform }}
-    version: {{ ld64_version }}
-    script: install-ld64.sh
-    build:
-      activate_in_script: True
-      missing_dso_whitelist:
-        - /usr/lib/libxar.1.dylib  # [osx]
-    requirements:
-      build:
-        - {{ compiler('cxx') }}
-        - autoconf
-        - automake
-        - make
-      host:
-        - llvm  {{ llvm_version }}.*
-        - clang {{ llvm_version }}.*
-        - tapi
-        - libcxx  # [osx]
-        - libuuid  # [linux]
-      run:
-        - {{ pin_compatible("tapi") }}
-        - libcxx  # [osx]
-        - ldid    # [osx]
-      run_constrained:
-        - {{ pin_compatible("clang") }}
-        - ld {{ ld64_version }}.*
-        - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
-    test:
-      requires:
-        - clang {{ llvm_version }}.*
-      commands:
-        - test -f $PREFIX/bin/{{ macos_machine }}-ld
-        - echo "int main() {}" > lto.c                                              # [osx]
-        - clang -c lto.c -o lto.o -flto                                             # [osx]
-        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx and x86_64]
-        - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch arm64      # [osx and arm64]
-      downstreams:
-        - gfortran_osx-64  # [osx and cross_platform=="osx-64"]
-    about:
-      home: https://github.com/tpoechtrager/cctools-port
-      license: APSL-2.0
-      license_family: Other
-      license_file: cctools/ld64/APPLE_LICENSE
-      summary: Darwin Mach-O cross linker
-
   - name: ld64
     version: {{ ld64_version }}
     build:
       skip: True   # [cross_platform != target_platform]
-    script: install-ld64-symlinks.sh
+      missing_dso_whitelist:
+        - "*/libc++.1.dylib"  # [osx]
+        - "*/libtapi.dylib"  # [osx]
+    script: install-ld64.sh
     requirements:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
+        - tapi 1100.0.11
       run:
-        - {{ pin_subpackage("ld64_" + cross_platform, exact=True) }}
+        - tapi
       run_constrained:
         - cctools {{ cctools_version }}.*
-        - cctools_{{ cross_platform }} {{ cctools_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/ld
@@ -171,21 +74,28 @@ outputs:
       license_family: Other
       license_file: cctools/ld64/APPLE_LICENSE
       summary: Darwin Mach-O native linker
+      description: |
+        ld64 is Apple's linker for creating Mach-O executables and libraries.
+        This native version provides:
+        - Creation of Mach-O executables and dynamic libraries
+        - Support for macOS-specific linking features
+        - Generation of debug information compatible with macOS tools
+        - Dynamic library versioning support
 
   - name: cctools
     version: {{ cctools_version }}
-    script: install-cctools-symlinks.sh
+    script: install-cctools.sh
     build:
       skip: True   # [cross_platform != target_platform]
+      missing_dso_whitelist:
+        - "*/libc++.1.dylib"  # [osx]
     requirements:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
         - {{ pin_subpackage("ld64", exact=True) }}
-        - {{ pin_subpackage("cctools_" + cross_platform, exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
-        - {{ pin_subpackage("cctools_" + cross_platform, exact=True) }}
     test:
       commands:
         - test -f $PREFIX/bin/as
@@ -200,6 +110,14 @@ outputs:
       license_family: Other
       license_file: cctools/APPLE_LICENSE
       summary: Native assembler, archiver, ranlib, libtool, otool et al for Darwin Mach-O files
+      description: |
+        This package provides native tools for working with macOS/Darwin binaries:
+        - as: Assembler for macOS
+        - ranlib: Archive index generator
+        - ar: Archive manager for creating static libraries
+        - otool: Object file examination tool similar to objdump
+        - install_name_tool: Tool to modify dynamic shared library dependencies
+        - strip: Tool to remove symbols from binaries
 
 about:
   home: https://github.com/tpoechtrager/cctools-port
@@ -209,6 +127,20 @@ about:
   license_family: Other
   license_file: cctools/APPLE_LICENSE
   summary: Assembler, archiver, ranlib, libtool, otool et al for Darwin Mach-O files. Darwin Mach-O linker.
+  description: |
+    This package contains Apple's native toolchain components ported to other platforms:
+
+    cctools - A collection of macOS/Darwin binary utilities including:
+    - as: Assembler for converting assembly language to machine code
+    - ar/ranlib: Archive management tools for static libraries
+    - otool: Object file displaying tool (similar to objdump)
+    - install_name_tool: Utility to manipulate dynamic shared library install names
+    - strip: Tool to remove symbols and sections from binaries
+
+    ld64 - The Darwin/macOS linker that creates:
+    - Mach-O executables and libraries
+    - Universal (fat) binaries for multiple architectures
+    - Dynamic libraries with proper versioning
 
 extra:
   recipe-maintainers:

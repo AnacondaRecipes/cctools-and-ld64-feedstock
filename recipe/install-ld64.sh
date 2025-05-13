@@ -1,7 +1,6 @@
 #!/bin/bash
 
-. activate "${BUILD_PREFIX}"
-cd "${SRC_DIR}"
+set -ex
 
 pushd cctools_build_final/ld64
   make install
@@ -9,3 +8,5 @@ pushd cctools_build_final/ld64
     dsymutil ${PREFIX}/bin/*ld
   fi
 popd
+
+ln -s $PREFIX/bin/${macos_machine}-ld $PREFIX/bin/ld
