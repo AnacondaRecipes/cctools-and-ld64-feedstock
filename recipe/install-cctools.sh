@@ -1,9 +1,6 @@
 #!/bin/bash
 
-set -e
-
-. activate "${BUILD_PREFIX}"
-cd "${SRC_DIR}"
+set -ex
 
 pushd cctools_build_final
   make install
