@@ -45,9 +45,9 @@ requirements:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
     - zlib
-    - llvmdev {{ llvm_version }}.*
-    - libuuid   # [linux]
-    - tapi
+    - llvmdev {{ llvm_version }}
+    - libuuid 1.41.5  # [linux]
+    - tapi 1100.0.11
   run:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
 
@@ -63,8 +63,7 @@ outputs:
       host:
         - llvm  {{ llvm_version }}.*
         - clang {{ llvm_version }}.*
-        - libcxx  # [osx]
-        - tapi
+        - tapi 1100.0.11
       run:
         - tapi
       run_constrained:
@@ -100,7 +99,6 @@ outputs:
         - {{ pin_subpackage("ld64", exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
-        - libcxx  # [osx]
     test:
       commands:
         - test -f $PREFIX/bin/as
