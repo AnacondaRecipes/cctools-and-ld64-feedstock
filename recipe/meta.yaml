@@ -41,6 +41,7 @@ requirements:
     - zlib
     - llvmdev {{ llvm_version }}
     - libuuid 1.41.5  # [linux]
+    - libcxx {{ llvm_version }}
     - tapi 1100.0.11
   run:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
@@ -50,6 +51,9 @@ outputs:
     version: {{ ld64_version }}
     build:
       skip: True   # [cross_platform != target_platform]
+      missing_dso_whitelist:
+        - "*/libc++.1.dylib"  # [osx]
+        - "*/libtapi.dylib"  # [osx]
     script: install-ld64.sh
     requirements:
       host:
@@ -84,6 +88,8 @@ outputs:
     script: install-cctools.sh
     build:
       skip: True   # [cross_platform != target_platform]
+      missing_dso_whitelist:
+        - "*/libc++.1.dylib"  # [osx]
     requirements:
       host:
         - llvm  {{ llvm_version }}
