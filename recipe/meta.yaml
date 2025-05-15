@@ -41,7 +41,7 @@ requirements:
     - zlib
     - llvmdev {{ llvm_version }}
     - libuuid 1.41.5  # [linux]
-    - libcxx {{ llvm_version }}
+    - libcxx-devel {{ llvm_version }}
     - tapi 1100.0.11
   run:
     - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx and x86_64]
@@ -59,11 +59,11 @@ outputs:
       host:
         - llvm  {{ llvm_version }}
         - clang {{ llvm_version }}
-        - libcxx {{ llvm_version }}
+        - libcxx-devel {{ llvm_version }}
         - tapi 1100.0.11
       run:
         - tapi
-        - libcxx {{ llvm_version }}
+        - libcxx-devel {{ llvm_version }}
       run_constrained:
         - cctools {{ cctools_version }}.*
     test:
@@ -94,11 +94,11 @@ outputs:
       host:
         - llvm  {{ llvm_version }}
         - clang {{ llvm_version }}
-        - libcxx {{ llvm_version }}
+        - libcxx-devel {{ llvm_version }}
         - {{ pin_subpackage("ld64", exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
-        - libcxx {{ llvm_version }}
+        - libcxx-devel {{ llvm_version }}
     test:
       commands:
         - test -f $PREFIX/bin/as
