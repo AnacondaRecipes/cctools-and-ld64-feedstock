@@ -19,7 +19,7 @@ source:
       - patches/0004-Turn-off-outputIsMappableFile-when-building-to-osx-a.patch
 
 build:
-  number: 1
+  number: 2
   skip: True  # [not osx]
   ignore_run_exports:
     - zlib
