@@ -3,7 +3,7 @@ build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
 
-staging_channel_upload_target: llvm-17.0.6-stage1-attempt-4
+staging_channel_upload_target: llvm-17.0.6-stage1-attempt-5
 
 channels:
   - llvm-17.0.6-stage0
