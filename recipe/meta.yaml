@@ -21,8 +21,6 @@ source:
 build:
   number: 2
   skip: True  # [not osx]
-  ignore_run_exports:
-    - zlib
 requirements:
   build:
     - clangxx {{ llvm_version }}.*  # [linux]
