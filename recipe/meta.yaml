@@ -47,11 +47,6 @@ requirements:
 outputs:
   - name: ld64
     version: {{ ld64_version }}
-    build:
-      skip: True   # [cross_platform != target_platform]
-      missing_dso_whitelist:
-        - "*/libc++.1.dylib"  # [osx]
-        - "*/libtapi.dylib"  # [osx]
     script: install-ld64.sh
     requirements:
       host:
@@ -61,9 +56,11 @@ outputs:
         - tapi 1100.0.11
       run:
         - tapi
-        - libcxx-devel {{ llvm_version }}
+        - libcxx
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
       run_constrained:
+        - {{ pin_compatible("clang") }}
+        - ld {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
     test:
       commands:
@@ -85,10 +82,6 @@ outputs:
   - name: cctools
     version: {{ cctools_version }}
     script: install-cctools.sh
-    build:
-      skip: True   # [cross_platform != target_platform]
-      missing_dso_whitelist:
-        - "*/libc++.1.dylib"  # [osx]
     requirements:
       host:
         - llvm  {{ llvm_version }}
@@ -97,8 +90,11 @@ outputs:
         - {{ pin_subpackage("ld64", exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
-        - libcxx-devel  {{ llvm_version }}
+        - libcxx
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
+      run_constrained:
+        # clang might pull in the wrong cctools otherwise
+        - clang {{ llvm_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/as
