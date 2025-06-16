@@ -3,7 +3,8 @@ build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
 
-staging_channel_upload_target: llvm-17.0.6-stage2-attempt-3
+staging_channel_upload_target: llvm-17.0.6-stage2-attempt-4
 
 channels:
+  - https://staging.continuum.io/prefect/llvm-17.0.6-stage2-attempt-3
   - https://staging.continuum.io/prefect/llvm-17.0.6-stage2
