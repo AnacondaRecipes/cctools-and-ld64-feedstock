@@ -6,6 +6,6 @@ vc:
   - 14
 
 c_compiler_version:     # [osx]
-  - 17                  # [osx]
+  - 19                  # [osx]
 cxx_compiler_version:   # [osx]
-  - 17                  # [osx]
+  - 19                  # [osx]
