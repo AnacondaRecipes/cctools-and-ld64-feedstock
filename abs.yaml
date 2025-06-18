@@ -1,5 +1,0 @@
-# the conda-build parameters to use for disabling --skip-existing
-build_parameters:
-  - "--suppress-variables"
-  - "--error-overlinking"
-  - "-c https://staging.continuum.io/prefect/llvm-17.0.6-stage2-attempt-4"
