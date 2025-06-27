@@ -18,6 +18,7 @@ source:
       - patches/dont_link_with_libcxxabi.patch
       - patches/530-ld64-add-conda-specific-env-vars-to-modify-lib-search-paths.patch
       - patches/ppc-int64_t.patch
+      - patches/omit-duplicate-rpaths.patch
 
 build:
   number: 26
