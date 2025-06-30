@@ -18,7 +18,7 @@ source:
       - patches/dont_link_with_libcxxabi.patch
       - patches/530-ld64-add-conda-specific-env-vars-to-modify-lib-search-paths.patch
       - patches/ppc-int64_t.patch
-      - patches/omit-duplicate-rpaths.patch
+      # - patches/omit-duplicate-rpaths.patch
 
 build:
   number: 26
@@ -128,14 +128,18 @@ outputs:
         - cctools {{ cctools_version }}.*
         - cctools_{{ cross_platform }} {{ cctools_version }}.*
     test:
+      files:
+        - test_duplicate_rpaths.py
       requires:
         - clang {{ llvm_version }}.*
+        - python
       commands:
         - test -f $PREFIX/bin/{{ macos_machine }}-ld  # [osx]
         - echo "int main() {}" > lto.c                                              # [osx]
         - clang -c lto.c -o lto.o -flto                                             # [osx]
         - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch x86_64     # [osx and x86_64]
         - $PREFIX/bin/{{ macos_machine }}-ld lto.o -o lto -lSystem -arch arm64     # [osx and arm64]
+        - python test_duplicate_rpaths.py  # [osx]
       downstreams:
         - gfortran_osx-64  # [osx and cross_platform=="osx-64"]
     about:
