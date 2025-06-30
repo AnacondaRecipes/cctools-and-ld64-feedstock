@@ -1,42 +1,32 @@
-From 8781d67e6288fa315362c5107a991d607fedbaee Mon Sep 17 00:00:00 2001
-From: Min RK <benjaminrk@gmail.com>
-Date: Fri, 4 Apr 2025 16:42:56 +0200
-Subject: [PATCH] omit duplicate rpaths
-
-omit and warn, matching ld-prime
----
- cctools/ld64/src/ld/HeaderAndLoadCommands.hpp | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/cctools/ld64/src/ld/HeaderAndLoadCommands.hpp b/cctools/ld64/src/ld/HeaderAndLoadCommands.hpp
-index ab305e1..e5f0b06 100644
---- a/cctools/ld64/src/ld/HeaderAndLoadCommands.hpp
-+++ b/cctools/ld64/src/ld/HeaderAndLoadCommands.hpp
-@@ -31,6 +31,8 @@
- #include <mach-o/loader.h>
- #include <string_view>
+diff --git a/cctools/ld64/src/ld/Options.cpp b/cctools/ld64/src/ld/Options.cpp
+index 5b8c755..7e7c25a 100644
+--- a/cctools/ld64/src/ld/Options.cpp
++++ b/cctools/ld64/src/ld/Options.cpp
+@@ -43,6 +43,7 @@
+ #include <tapi/tapi.h>
+ #endif /* TAPI_SUPPORT */
  
 +#include <stdio.h>
-+#include <set>
  #include <vector>
- 
- #include "MachOFileAbstraction.hpp"
-@@ -1764,8 +1766,15 @@ void HeaderAndLoadCommandsAtom<A>::copyRawContent(uint8_t buffer[]) const
- 
- 	if ( _hasRPathLoadCommands ) {
- 		const std::vector<const char*>& rpaths = _options.rpaths();
-+		std::set<std::string> seen_rpaths;
- 		for (std::vector<const char*>::const_iterator it = rpaths.begin(); it != rpaths.end(); ++it) {
-+			const std::string rpath_str = *it;
-+			if (seen_rpaths.count(rpath_str)) {
-+				fprintf(stderr, "ld: warning: duplicate -rpath '%s' ignored\n", rpath_str.c_str());
-+			} else {
- 			p = this->copyRPathLoadCommand(p, *it);
-+			seen_rpaths.insert(rpath_str);
-+			}
- 		}
- 	}
- 	
--- 
-2.47.0
-
+ #include <map>
+ #include <sstream>
+@@ -3509,7 +3510,18 @@ void Options::parse(int argc, const char* argv[])
+ 			}
+ 			else if ( strcmp(arg, "-rpath") == 0 ) {
+ 				const char* path = checkForNullArgument(arg, argv[++i]);
+-				fRPaths.push_back(path);
++				// Check for duplicates before adding
++				bool isDuplicate = false;
++				for (const char* existingPath : fRPaths) {
++					if (strcmp(existingPath, path) == 0) {
++						warning("duplicate rpath \"%s\" specified, ignoring", path);
++						isDuplicate = true;
++						break;
++					}
++				}
++				if (!isDuplicate) {
++					fRPaths.push_back(path);
++				}
+ 			}
+ 			else if ( strcmp(arg, "-read_only_stubs") == 0 ) {
+ 				fReadOnlyx86Stubs = true;
