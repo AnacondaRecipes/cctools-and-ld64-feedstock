@@ -1,3 +1,7 @@
+build_parameters:
+  - "--suppress-variables"
+  - "--error-overlinking"
+
 staging_channel_upload_target: llvm-19.1.7-stage2-build-0
 
 channels:
