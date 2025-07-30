@@ -21,6 +21,7 @@ requirements:
   build:
     - clangxx {{ c_compiler_version }}.*  # [linux]
     - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
     - autoconf
     - automake
     - libtool
