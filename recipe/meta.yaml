@@ -56,9 +56,8 @@ outputs:
       run:
         - tapi
         - libcxx
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
       run_constrained:
-        # - {{ pin_compatible("clang") }}
+        - {{ pin_compatible("clang") }}
         - ld {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
     test:
@@ -86,6 +85,7 @@ outputs:
     script: install-cctools.sh
     requirements:
       host:
+        - {{ stdlib('c') }}
         - llvm  {{ c_compiler_version }}
         - clang {{ c_compiler_version }}
         - libcxx-devel {{ c_compiler_version }}
@@ -93,7 +93,6 @@ outputs:
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
         - libcxx
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
       run_constrained:
         # clang might pull in the wrong cctools otherwise
         - clang {{ c_compiler_version }}.*
