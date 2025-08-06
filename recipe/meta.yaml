@@ -28,7 +28,6 @@ requirements:
     - llvmdev {{ c_compiler_version }}.*  # [build_platform != target_platform]
     - make
     - sed
-    - patch
 
   host:
     #- xar
@@ -85,7 +84,6 @@ outputs:
     script: install-cctools.sh
     requirements:
       host:
-        - {{ stdlib('c') }}
         - llvm  {{ c_compiler_version }}
         - clang {{ c_compiler_version }}
         - libcxx-devel {{ c_compiler_version }}
