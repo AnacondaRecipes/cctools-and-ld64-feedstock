@@ -1,6 +1,5 @@
-{% set cctools_version = '986' %}
-{% set ld64_version = '711' %}
-{% set llvm_version = "17.0.6" %}
+{% set cctools_version = '1010.6' %}
+{% set ld64_version = '951.9' %}
 
 package:
   name: cctools-and-ld64
@@ -8,38 +7,35 @@ package:
 
 source:
   # latest commit from branch {{ cctools_version }}-ld64-{{ ld64_version }}
-  - url: https://github.com/tpoechtrager/cctools-port/archive/437ced391dbf14dce86f977ca050a750d5682f39.tar.gz
-    sha256: cf4020ddb92467de020c322eb13f0cac9ed992daa862a09bc2607e42467b3042
+  - url: https://github.com/tpoechtrager/cctools-port/archive/d8d666a78745f487f071fd5fa30dc5f7452b4ee6.tar.gz
+    sha256: b8c59ed076e1028eedd9401086b23454befabfe8ec97766acd4c4a4c7e280dba
     patches:
       - patches/0001-Don-t-link-with-libc-abi.patch
       - patches/0002-ld64-add-conda-specific-env-vars-to-modify-lib-searc.patch
-      # Taken from https://github.com/tpoechtrager/cctools-port/pull/116
-      - patches/0003-Restore-using-__builtin_available-for-macos.patch
-      # Taken from https://github.com/tpoechtrager/cctools-port/pull/118
-      - patches/0004-Turn-off-outputIsMappableFile-when-building-to-osx-a.patch
+
 
 build:
-  number: 3
+  number: 2
   skip: True  # [not osx]
 requirements:
   build:
-    - clangxx {{ llvm_version }}.*  # [linux]
+    - clangxx {{ c_compiler_version }}.*  # [linux]
     - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
     - autoconf
     - automake
     - libtool
-    - llvmdev {{ llvm_version }}.*  # [build_platform != target_platform]
+    - llvmdev {{ c_compiler_version }}.*  # [build_platform != target_platform]
     - make
     - sed
-    - patch
 
   host:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
     - zlib
-    - llvmdev {{ llvm_version }}
+    - llvmdev {{ c_compiler_version }}
     - libuuid 1.41.5  # [linux]
-    - libcxx-devel {{ llvm_version }}
+    - libcxx-devel {{ c_compiler_version }}
     - tapi 1100.0.11
 
 outputs:
@@ -52,14 +48,13 @@ outputs:
     script: install-ld64.sh
     requirements:
       host:
-        - llvm  {{ llvm_version }}
-        - clang {{ llvm_version }}
-        - libcxx-devel {{ llvm_version }}
+        - llvm  {{ c_compiler_version }}
+        - clang {{ c_compiler_version }}
+        - libcxx-devel {{ c_compiler_version }}
         - tapi 1100.0.11
       run:
         - tapi
         - libcxx
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
       run_constrained:
         - {{ pin_compatible("clang") }}
         - ld {{ ld64_version }}.*
@@ -89,17 +84,16 @@ outputs:
     script: install-cctools.sh
     requirements:
       host:
-        - llvm  {{ llvm_version }}
-        - clang {{ llvm_version }}
-        - libcxx-devel {{ llvm_version }}
+        - llvm  {{ c_compiler_version }}
+        - clang {{ c_compiler_version }}
+        - libcxx-devel {{ c_compiler_version }}
         - {{ pin_subpackage("ld64", exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
         - libcxx
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
       run_constrained:
         # clang might pull in the wrong cctools otherwise
-        - clang {{ llvm_version }}.*
+        - clang {{ c_compiler_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/as
