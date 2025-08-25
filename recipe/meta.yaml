@@ -1,5 +1,5 @@
-{% set cctools_version = '1010.6' %}
-{% set ld64_version = '951.9' %}
+{% set cctools_version = '1021.4' %}
+{% set ld64_version = '954.16' %}
 
 package:
   name: cctools-and-ld64
@@ -7,15 +7,16 @@ package:
 
 source:
   # latest commit from branch {{ cctools_version }}-ld64-{{ ld64_version }}
-  - url: https://github.com/tpoechtrager/cctools-port/archive/d8d666a78745f487f071fd5fa30dc5f7452b4ee6.tar.gz
-    sha256: b8c59ed076e1028eedd9401086b23454befabfe8ec97766acd4c4a4c7e280dba
+  - url: https://github.com/tpoechtrager/cctools-port/archive/7ce3e9d500f9fa310f97507e84be763b2e8389ce.tar.gz
+    sha256: fd9b04a97d2360991a414b0aac1306ee627712e48423dc7d724411592be55403
     patches:
       - patches/0001-Don-t-link-with-libc-abi.patch
       - patches/0002-ld64-add-conda-specific-env-vars-to-modify-lib-searc.patch
+      - patches/0003-point-target-otool-to-llvm-otool-in-same-folder.patch
 
 
 build:
-  number: 2
+  number: 0
   skip: True  # [not osx]
 requirements:
   build:
