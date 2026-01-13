@@ -1,4 +1,9 @@
 build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
-  - "-c https://staging.continuum.io/prefect/llvm-20.1.8-stage2-build-0"
+
+# Stage 0: Build with LLVM 20 (from defaults), upload to stage0 channel
+# Will rebuild in Stage 2 with LLVM 21 after clang_bootstrap 21 is available
+staging_channel_upload_target: llvm-21.1.8-stage0-build-0
+
+# Use LLVM 20 from defaults channel (no staging channel needed for Stage 0)
