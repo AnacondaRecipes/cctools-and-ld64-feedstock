@@ -1,5 +1,5 @@
-{% set cctools_version = '1021.4' %}
-{% set ld64_version = '954.16' %}
+{% set cctools_version = '1024.3' %}
+{% set ld64_version = '955.13' %}
 
 package:
   name: cctools-and-ld64
@@ -7,12 +7,12 @@ package:
 
 source:
   # latest commit from branch {{ cctools_version }}-ld64-{{ ld64_version }}
-  - url: https://github.com/tpoechtrager/cctools-port/archive/7ce3e9d500f9fa310f97507e84be763b2e8389ce.tar.gz
-    sha256: fd9b04a97d2360991a414b0aac1306ee627712e48423dc7d724411592be55403
+  - url: https://github.com/tpoechtrager/cctools-port/archive/4eea09c41fd52ab302a9335edbdd507a2359e28e.tar.gz
+    sha256: 0df0f1932743d2580ebc281fa9b8039e724904e1b5cd01b95ed948bdcd6094b2
     patches:
       - patches/0001-Don-t-link-with-libc-abi.patch
       - patches/0002-ld64-add-conda-specific-env-vars-to-modify-lib-searc.patch
-      - patches/0003-point-target-otool-to-llvm-otool-in-same-folder.patch
+      # Removed: 0003-point-target-otool-to-llvm-otool-in-same-folder.patch - otool-wrapper doesn't exist in v1024.3
 
 
 build:
