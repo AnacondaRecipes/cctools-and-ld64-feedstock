@@ -2,8 +2,12 @@ build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
 
-# Stage 0: Build with LLVM 20 (from defaults), upload to stage0 channel
-# Will rebuild in Stage 2 with LLVM 21 after clang_bootstrap 21 is available
-staging_channel_upload_target: llvm-21.1.8-stage0-build-0
+# Stage 2: Rebuild with clang_bootstrap 21 from Stage 1
+# This produces cctools with run_constrained: clang 21.*
+staging_channel_upload_target: llvm-21.1.8-stage2-build-0
 
-# Use LLVM 20 from defaults channel (no staging channel needed for Stage 0)
+channels:
+  # Stage 1 channel has clang_bootstrap 21
+  - https://staging.continuum.io/pbp/llvm-21.1.8-stage1-build-0
+  # Stage 0 channel has supporting packages (llvmdev, clangdev, libcxx)
+  - https://staging.continuum.io/pbp/llvm-21.1.8-stage0-build-0
