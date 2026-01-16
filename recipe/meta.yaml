@@ -16,7 +16,7 @@ source:
 
 
 build:
-  number: 0
+  number: 1  # Stage 2: bumped to ensure priority over pkgs/main version
   skip: True  # [not osx]
 requirements:
   build:
