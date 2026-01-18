@@ -16,7 +16,7 @@ source:
 
 
 build:
-  number: 1  # Stage 2: bumped to ensure priority over pkgs/main version
+  number: 2  # Stage 2: updated with c_compiler_version=21 for clang 21.* constraint
   skip: True  # [not osx]
 requirements:
   build:
