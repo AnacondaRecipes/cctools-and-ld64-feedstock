@@ -37,8 +37,9 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
 fi
 
 # export CPPFLAGS="$CPPFLAGS -DCPU_SUBTYPE_ARM64_E=2"
-export CXXFLAGS="$CXXFLAGS -O2 -gdwarf-4"
-export CFLAGS="$CFLAGS -O2 -gdwarf-4"
+# Use -g0 to disable debug symbols and avoid dsymutil (LLVM 21 dsymutil has rpath issues)
+export CXXFLAGS="$CXXFLAGS -O2 -g0"
+export CFLAGS="$CFLAGS -O2 -g0"
 
 pushd ${SRC_DIR}/cctools
   ./autogen.sh
