@@ -1,4 +1,4 @@
 c_compiler_version:     # [osx]
-  - 21                  # [osx]  # Stage 2: updated for LLVM 21
+  - 21                  # [osx]
 cxx_compiler_version:   # [osx]
-  - 21                  # [osx]  # Stage 2: updated for LLVM 21
+  - 21                  # [osx]
