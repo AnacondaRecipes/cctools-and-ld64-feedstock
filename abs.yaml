@@ -1,4 +1,9 @@
 build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
-  - "-c https://staging.continuum.io/prefect/llvm-20.1.8-stage2-build-0"
+
+# Staging channel needed for LLVM 21 dependencies until promoted to pkgs/main
+channels:
+  - https://staging.continuum.io/pbp/llvm-21.1.8-stage2-build-0
+
+aggregate_check: false
