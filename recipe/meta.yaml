@@ -15,7 +15,7 @@ source:
 
 
 build:
-  number: 0
+  number: 1  # Stage 2: rebuilt with c_compiler_version=22 for clang 22.* constraint
   skip: True  # [not osx]
 requirements:
   build:
