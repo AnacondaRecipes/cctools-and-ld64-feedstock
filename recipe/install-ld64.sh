@@ -9,22 +9,29 @@ pushd cctools_build_final/ld64
   fi
 popd
 
-# Rewrite LC_LOAD_DYLIB for libtapi from @rpath/libtapi.dylib to an
-# absolute ${PREFIX}/lib/libtapi.dylib path.
+# Bundle libtapi.dylib INSIDE the ld64 package at a location adjacent to
+# the ld binary, and rewrite LC_LOAD_DYLIB to load it via @loader_path.
 #
-# Why: the default @rpath/libtapi.dylib fails when conda-build extracts
-# the package into a temp pkgs cache on a different filesystem and uses
-# softlinks: macOS dyld follows the symlink when resolving @rpath via
-# @loader_path/../lib (the only LC_RPATH entry), landing in the cache
-# directory where lib/ does not exist. @executable_path has the same
-# issue (verified — it also follows symlinks).
+# Why: conda-build's binary relocation rewrites BOTH absolute LC_RPATH
+# AND absolute LC_LOAD_DYLIB paths back to @rpath/@loader_path form for
+# portability. So we cannot use absolute paths to libtapi — they get
+# rewritten away during packaging.
 #
-# LC_LOAD_DYLIB with an absolute path does NOT go through rpath
-# resolution, so it's not affected by the symlink-follow behavior.
-# conda-build detects the prefix string in the binary and rewrites it
-# to the user's install prefix at install time via its binary prefix
-# replacement mechanism.
-install_name_tool -change @rpath/libtapi.dylib "${PREFIX}/lib/libtapi.dylib" "${PREFIX}/bin/${macos_machine}-ld"
+# The fundamental problem is that libtapi is in a SEPARATE conda package
+# (tapi). When conda-build extracts ld64 and tapi into separate temp
+# cache directories and uses softlinks (cross-filesystem fallback),
+# macOS dyld follows the symlink to the ld64 cache dir, where libtapi
+# is not adjacent. @loader_path, @executable_path, and @rpath all
+# follow the symlink to the cache target.
+#
+# Fix: copy libtapi.dylib into ld64's own bin/_lib/ directory. Now both
+# the binary and libtapi are in the same package (same cache extraction
+# directory), so @loader_path/_lib/libtapi.dylib resolves correctly
+# even after symlink-following. The path is relative (no prefix),
+# so conda-build leaves it alone.
+mkdir -p "${PREFIX}/bin/_lib"
+cp "${PREFIX}/lib/libtapi.dylib" "${PREFIX}/bin/_lib/libtapi.dylib"
+install_name_tool -change @rpath/libtapi.dylib @loader_path/_lib/libtapi.dylib "${PREFIX}/bin/${macos_machine}-ld"
 # install_name_tool invalidates the code signature; re-sign ad-hoc.
 codesign --remove-signature "${PREFIX}/bin/${macos_machine}-ld" 2>/dev/null || true
 codesign --sign - "${PREFIX}/bin/${macos_machine}-ld"
