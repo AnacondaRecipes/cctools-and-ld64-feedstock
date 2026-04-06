@@ -2,8 +2,8 @@ build_parameters:
   - "--suppress-variables"
   - "--error-overlinking"
 
-# Staging channel needed for LLVM 21 dependencies until promoted to pkgs/main
+# Stage 2: clang_bootstrap 22 from xkong-staging
 channels:
-  - https://staging.continuum.io/pbp/llvm-21.1.8-stage2-build-0
+  - https://conda.anaconda.org/xkong-staging
 
 aggregate_check: false
