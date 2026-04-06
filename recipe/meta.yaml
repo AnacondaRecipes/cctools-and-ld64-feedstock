@@ -15,7 +15,7 @@ source:
 
 
 build:
-  number: 1  # Stage 2: c_compiler_version=22 for clang 22.* constraint + ld64 rpath fix
+  number: 1  # Stage 2: c_compiler_version=22 for clang 22.* + ld64 rpath fix (idempotent)
   skip: True  # [not osx]
 requirements:
   build:
