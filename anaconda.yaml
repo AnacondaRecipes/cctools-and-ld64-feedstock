@@ -1,0 +1,12 @@
+anaconda_config_version: 1
+upstream_sources:
+  - webpage:
+      url: https://github.com/tpoechtrager/cctools-port/branches/all
+      regex: '"name":"([\d.]+)-ld64-[\d.]+"'
+    packages:
+      - cctools
+  - webpage:
+      url: https://github.com/tpoechtrager/cctools-port/branches/all
+      regex: '"name":"[\d.]+-ld64-([\d.]+)"'
+    packages:
+      - ld64
