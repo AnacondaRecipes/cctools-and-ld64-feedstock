@@ -67,9 +67,13 @@ outputs:
         - echo "int main(void) { return 0; }" > hello.c
         - clang --ld-path=$PREFIX/bin/ld hello.c -o hello
         - ./hello
-        # -flto makes ld64 load the libLTO of the target LLVM (name substituted in build.sh)
+        # end-to-end LTO link; clang passes its own libLTO to ld64 (-lto_library)
         - clang -flto --ld-path=$PREFIX/bin/ld hello.c -o hello-lto
         - ./hello-lto
+        # ld64 alone must load libLTO by the name build.sh substitutes (target LLVM)
+        - clang -flto -c hello.c -o hello.bc
+        - $PREFIX/bin/ld -r -arch arm64 hello.bc -o hello-r.o   # [arm64]
+        - $PREFIX/bin/ld -r -arch x86_64 hello.bc -o hello-r.o  # [x86_64]
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
@@ -103,6 +107,8 @@ outputs:
         # clang might pull in the wrong cctools otherwise
         - clang {{ llvm_version }}.*
     test:
+      requires:
+        - clang {{ llvm_version }}.*
       commands:
         - test -f $PREFIX/bin/as
         - test -f $PREFIX/bin/ranlib
@@ -110,6 +116,10 @@ outputs:
         - test -f $PREFIX/bin/otool
         - test -f $PREFIX/bin/install_name_tool
         - test -f $PREFIX/bin/strip
+        # nm reads bitcode through libLTO, by the name build.sh substitutes (target LLVM)
+        - echo "int main(void) { return 0; }" > hello.c
+        - clang -flto -c hello.c -o hello.bc
+        - $PREFIX/bin/nm hello.bc | grep "T _main"
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
@@ -156,5 +166,5 @@ extra:
     - katietz
     - h-vetinari
   skip-lints:
+    # both outputs host clang as the target LLVM library (and for pin_compatible), not as a compiler
     - should_use_compilers
-    - missing_tests
