@@ -1,4 +1,0 @@
-# PR CI only - clang 23.1.4 from AnacondaRecipes/clangdev-feedstock#35 (graph of head 3fa4ae1);
-# REMOVE before merge (cctools-and-ld64 hosts clang 23.1.4, which is not on pkgs/main yet)
-channels:
-  - https://package-build.internal.anaconda.com/pkg-orchestrator/v1/channels/graphs/d40b0fa0-8131-4f75-9918-ad6aa2844660
