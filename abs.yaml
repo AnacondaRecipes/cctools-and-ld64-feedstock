@@ -1,9 +1,0 @@
-build_parameters:
-  - "--suppress-variables"
-  - "--error-overlinking"
-
-# Stage 2: clang_bootstrap 22 from xkong-staging
-channels:
-  - https://conda.anaconda.org/xkong-staging
-
-aggregate_check: false
