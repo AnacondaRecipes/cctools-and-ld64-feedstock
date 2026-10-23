@@ -1,9 +1,4 @@
-build_parameters:
-  - "--suppress-variables"
-  - "--error-overlinking"
-
-# Stage 2: clang_bootstrap 22 from xkong-staging
+# PR CI only - clang 23.1.4 from AnacondaRecipes/clangdev-feedstock#35 (graph of head 3fa4ae1);
+# REMOVE before merge (cctools-and-ld64 hosts clang 23.1.4, which is not on pkgs/main yet)
 channels:
-  - https://conda.anaconda.org/xkong-staging
-
-aggregate_check: false
+  - https://package-build.internal.anaconda.com/pkg-orchestrator/v1/channels/graphs/d40b0fa0-8131-4f75-9918-ad6aa2844660

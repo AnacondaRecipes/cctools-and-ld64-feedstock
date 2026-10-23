@@ -15,7 +15,7 @@ source:
 
 
 build:
-  number: 1  # Stage 2: c_compiler_version=22 + bundled libtapi for softlink fix
+  number: 2  # LLVM 23: host LLVM and clang constraints move to 23
   skip: True  # [not osx]
 requirements:
   build:
@@ -25,17 +25,17 @@ requirements:
     - autoconf
     - automake
     - libtool
-    - llvmdev {{ c_compiler_version }}.*  # [build_platform != target_platform]
+    - llvmdev {{ llvm_version }}.*  # [build_platform != target_platform]
     - make
     - sed
 
   host:
     #- xar
     # We only use the static library from this and only get away with that as it depends on nothing.
-    - zlib
-    - llvmdev {{ c_compiler_version }}
+    - zlib {{ zlib }}
+    - llvmdev {{ llvm_version }}
     - libuuid 1.41.5  # [linux]
-    - libcxx-devel {{ c_compiler_version }}
+    - libcxx-devel {{ llvm_version }}
     - tapi 1100.0.11
 
 outputs:
@@ -48,9 +48,9 @@ outputs:
     script: install-ld64.sh
     requirements:
       host:
-        - llvm  {{ c_compiler_version }}
-        - clang {{ c_compiler_version }}
-        - libcxx-devel {{ c_compiler_version }}
+        - llvm  {{ llvm_version }}
+        - clang {{ llvm_version }}
+        - libcxx-devel {{ llvm_version }}
         - tapi 1100.0.11
       run:
         - tapi
@@ -60,8 +60,16 @@ outputs:
         - ld {{ ld64_version }}.*
         - cctools {{ cctools_version }}.*
     test:
+      requires:
+        - clang {{ llvm_version }}.*
       commands:
         - test -f $PREFIX/bin/ld
+        - echo "int main(void) { return 0; }" > hello.c
+        - clang --ld-path=$PREFIX/bin/ld hello.c -o hello
+        - ./hello
+        # -flto makes ld64 load the libLTO of the target LLVM (name substituted in build.sh)
+        - clang -flto --ld-path=$PREFIX/bin/ld hello.c -o hello-lto
+        - ./hello-lto
     about:
       home: https://github.com/tpoechtrager/cctools-port
       license: APSL-2.0
@@ -84,16 +92,16 @@ outputs:
     script: install-cctools.sh
     requirements:
       host:
-        - llvm  {{ c_compiler_version }}
-        - clang {{ c_compiler_version }}
-        - libcxx-devel {{ c_compiler_version }}
+        - llvm  {{ llvm_version }}
+        - clang {{ llvm_version }}
+        - libcxx-devel {{ llvm_version }}
         - {{ pin_subpackage("ld64", exact=True) }}
       run:
         - {{ pin_subpackage("ld64", exact=True) }}
         - libcxx
       run_constrained:
         # clang might pull in the wrong cctools otherwise
-        - clang {{ c_compiler_version }}.*
+        - clang {{ llvm_version }}.*
     test:
       commands:
         - test -f $PREFIX/bin/as

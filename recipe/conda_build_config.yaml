@@ -1,5 +1,13 @@
-# Stage 2: must match LLVM 22 — sets run_constrained: clang 22.*
+# macOS builds with the released clang_bootstrap (LLVM 22); release-first order of the LLVM 23 chain
+c_compiler:             # [osx]
+  - clang_bootstrap     # [osx]
+cxx_compiler:           # [osx]
+  - clang_bootstrap     # [osx]
 c_compiler_version:     # [osx]
-  - 22                  # [osx]
+  - 22.1.2              # [osx]
 cxx_compiler_version:   # [osx]
-  - 22                  # [osx]
+  - 22.1.2              # [osx]
+
+# target LLVM: host llvm/clang/libcxx-devel, the libLTO name in build.sh and the clang constraints
+llvm_version:
+  - 23
